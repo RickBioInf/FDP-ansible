@@ -1,0 +1,12 @@
+---
+- name: Install Docker
+  hosts: prod #ota #prod
+  gather_facts: yes
+  become: yes
+  roles:
+    - ansible_role_install_docker_engine_ubuntu
+    #- ansible_role_install_official_lumc_fair_data_point
+  environment:
+    https_proxy: http://ict-lnx-upd01.ictbeheer.local:3142
+    http_proxy: http://ict-lnx-upd01.ictbeheer.local:3142
+  
