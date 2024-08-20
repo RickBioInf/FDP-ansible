@@ -1,7 +1,6 @@
 [prod]
-#res-fdp-web01.researchlumc.nl
-ict-sec-app03.ictbeheer.local
+#example.of.prod.url
 
 [ota]
-#res-fdp-web91.researchlumc.nl
-ict-sec-app03.ictbeheer.local
+#example.of.ota.url
+localhost
