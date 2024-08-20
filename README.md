@@ -11,7 +11,7 @@ Depending on what you are making, it can be a good idea to include screenshots o
 
 ## Installation
 ``` shell
-git clone --recursive-submodules git@github.com:RickBioInf/FDP-ansible.git
+git clone --recurse-submodules git@github.com:RickBioInf/FDP-ansible.git
 ``` 
 
 ## Usage
