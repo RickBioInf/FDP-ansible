@@ -1,6 +1,0 @@
-[submodule "docker-ansible"]
-	path = roles/docker-ansible
-	url = git@github.com:RickBioInf/docker-ansible.git
-[submodule "FDP-ansible-role"]
-	path = roles/FDP-ansible-role
-	url = git@github.com:RickBioInf/FDP-ansible-role.git
