@@ -1,0 +1,114 @@
+---
+- name: Create /etc/letsencrypt/ directory
+  file:
+    path: /etc/letsencrypt/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: yes
+
+- name: Create FDP directory structure
+  file:
+    path: /opt/fdp/blazegraph/ 
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: yes
+
+- name: Create FDP directory structure
+  file:
+    path: /opt/fdp/fdp-client/assets/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: yes
+
+- name: Create FDP directory structure
+  file:
+    path: /opt/fdp/mongo/data/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: yes
+
+- name: Create FDP directory structure
+  file:
+    path: /opt/fdp/nginx/sites-available/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: yes
+
+- name: Create FDP directory structure
+  file:
+    path: /opt/fdp/nginx/sites-enabled
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: yes
+
+- name: Add docker-compose.yml to /opt/fdp 
+  template:
+    src: docker-compose.yml.jn2
+    dest: /opt/fdp/docker-compose.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add application.yml to /opt/fdp
+  template:
+    src: application.yml.jn2
+    dest: /opt/fdp/application.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add _variables.scss to /opt/fdp/fdp-client/
+  template:
+    src: _variables.scss
+    dest: /opt/fdp/fdp-client/_variables.scss
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add lumc-logo-blauw-engels-png.png to /opt/fdp/fdp-client/assets
+  copy:
+    src: lumc-logo-blauw-engels-png.png 
+    dest: /opt/fdp/fdp-client/assets/lumc-logo-blauw-engels-png.png
+    remote_src: false
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add fdp.conf to /opt/fdp/nginx/sites-available
+  template:
+    src: fdp.conf.jn2
+    dest: /opt/fdp/nginx/sites-available/fdp.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add nginx.conf
+  template:
+    src: nginx.conf.jn2
+    dest: /opt/fdp/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+
+#- name: Create symbolic link /opt/fdp/nginx/sites-enabled/fdp.conf -> ../sites-available/fdp.conf
+#  file:
+#    src: /opt/fdp/nginx/sites-available/fdp.conf
+#    dest: '../sites-enabled/fdp.conf'
+#    state: link
+
+- name: Create symbolic link /opt/fdp/nginx/sites-available/fdp.conf -> ../sites-enabled/fdp.conf
+  shell: ln -sf ../sites-available/fdp.conf 
+  args:
+    chdir: /opt/fdp/nginx/sites-enabled/

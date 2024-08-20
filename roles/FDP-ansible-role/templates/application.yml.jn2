@@ -1,0 +1,18 @@
+# application.yml
+
+instance:
+    clientUrl: https://fdp.lumc.nl
+    #persistentUrl: https://purl.org/fairdatapoint/example
+    #index: true
+
+security:
+    jwt:
+        token:
+            #secret-key: <random 128 characters string>
+            secret-key: {{ application_secret_key_128_chars }}
+
+# repository settings (can be changed to different repository)
+repository:
+    type: 5
+    blazegraph:
+        url: http://blazegraph:8080/blazegraph

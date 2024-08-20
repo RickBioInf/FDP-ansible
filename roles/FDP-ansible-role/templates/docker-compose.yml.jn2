@@ -1,0 +1,44 @@
+# docker-compose.yml
+
+ version: '3'
+ services:
+     proxy:
+         image: {{ nginx_docker_image_version }}
+         restart: always
+         ports:
+             - 80:80
+             - 443:443
+         volumes:
+             # Mount the nginx folder with the configuration
+             - ./nginx:/etc/nginx:ro
+             # Mount the letsencrypt certificates
+             - /etc/letsencrypt:/etc/letsencrypt:ro
+
+     fdp:
+         image: {{ fdp_docker_image_version }}
+         restart: always
+         volumes:
+             - ./application.yml:/fdp/application.yml:ro
+
+     fdp-client:
+         image: {{ fdp_client_docker_image_version }}
+         restart: always
+         environment:
+             - FDP_HOST=fdp
+         volumes:
+             - ./fdp-client/assets/lumc-logo-blauw-engels-png.png:/usr/share/nginx/html/assets/lumc-logo-blauw-engels-png.png:ro
+             - ./fdp-client/_variables.scss:/src/scss/custom/_variables.scss:ro
+
+     mongo:
+         image: {{ mongo_docker_image_version }}
+         restart: always
+         ports:
+           - "127.0.0.1:27017:27017"
+         volumes:
+             - ./mongo/data:/data/db
+
+     blazegraph:
+         image: {{ blazegraph_docker_image_version }}
+         restart: always
+         volumes:
+             - ./blazegraph:/blazegraph-data

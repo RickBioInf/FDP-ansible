@@ -1,0 +1,31 @@
+# nginx/sites-available/fdp.conf
+
+server {
+    listen 443 ssl;
+
+    # Geant LUMC certificates , we will mount these in docker-compose.yml
+    ssl_certificate /etc/letsencrypt/fdp_lumc_nl.pem;
+    ssl_certificate_key /etc/letsencrypt/res-fdp-web01.researchlumc.nl.priv.pem;
+
+    server_name {{ fdp_server_url }};
+
+    # We pass all the request to the fdp-client container, we can use HTTP in the internal network
+    # fdp-client_1 is the name of the client container in our configuration, we can use it as host
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+	# If the FDP Index is deployed behind a proxy, it must correctly set header, e.g., X-Forwarded-For.
+	# To append the remote users IP to any existing X-Forwarded-For value:
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass_request_headers on;
+        proxy_pass http://fdp-fdp-client-1;
+    }
+}
+
+# We redirect all request from HTTP to HTTPS
+server {
+    listen 80;
+    server_name {{ fdp_server_url }};
+    return 301 https://$host$request_uri;
+}
+

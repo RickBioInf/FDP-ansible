@@ -1,0 +1,52 @@
+---
+- name: Install packages to install Docker's official GPG key
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+
+- name: Add Docker singning key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg 
+    keyring: /etc/apt/keyrings/docker.gpg
+
+- name: Add docker to sources.list.d
+  template:
+    src: docker.list
+    dest: /etc/apt/sources.list.d/docker.list
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - apt update
+
+- name: Install Docker engine
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    update_cache: yes
+    state: present
+
+- name: Start and enable docker service
+  systemd:
+    name: docker.service
+    state: started
+    enabled: true
+
+- name: Download Docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-linux-x86_64
+    dest: /usr/local/bin/docker-compose
+
+- name: Set doccker-compose execute bit
+  file:
+    path: /usr/local/bin/docker-compose
+    owner: root
+    group: root
+    mode: 0755
